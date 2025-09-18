@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import { Menu, Bell, Home, Search, Plus } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 export default function Navbar() {
     const [search, setSearch] = useState("");
+      const router = useRouter();
 
     return (
         <header className="flex items-center justify-between px-6 py-3 bg-white shadow-sm border-b border-gray-100">
