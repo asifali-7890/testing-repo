@@ -292,10 +292,10 @@ export default function UserProfile() {
                   Cancel
                 </button>
                 <button 
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors" 
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-orange-700 rounded-md transition-colors" 
                   onClick={handleSaveUserInfo}
                 >
-                  Save
+                  Save Changes
                 </button>
               </div>
             )}
@@ -370,10 +370,10 @@ export default function UserProfile() {
                   Cancel
                 </button>
                 <button 
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors" 
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-orange-700 rounded-md transition-colors" 
                   onClick={handleSaveOrgDetails}
                 >
-                  Save
+                  Save Changes
                 </button>
               </div>
             )}
