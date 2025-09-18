@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import Navbar from '../../../../../components/Navbar.jsx';
 import { getClients } from '/utils/storage.js';
 
-
 export default function UserProfile() {
   const router = useRouter();
   const { clientName } = router.query;
@@ -17,7 +16,6 @@ export default function UserProfile() {
       const clients = getClients();
       const decodedName = decodeURIComponent(clientName);
       const found = clients.find(c => {
-        // Prefer firstName/lastName match, fallback to name
         const fullName = `${c.firstName || ''} ${c.lastName || ''}`.trim();
         return (fullName === decodedName) || (c.name === decodedName);
       });
@@ -34,14 +32,12 @@ export default function UserProfile() {
   const handleSaveUserInfo = () => {
     const clients = getClients();
     const idx = clients.findIndex(c => c.id === client.id);
-    // Check for unique email
     const emailExists = clients.some((c, i) => c.email === form.email && i !== idx);
     if (emailExists) {
       alert("Email must be unique for every client.");
       return;
     }
     if (idx !== -1) {
-      // If firstName or lastName is changed, update and redirect
       const oldFullName = `${clients[idx].firstName || ''} ${clients[idx].lastName || ''}`.trim();
       const newFirstName = form.firstName || clients[idx].firstName || '';
       const newLastName = form.lastName || clients[idx].lastName || '';
@@ -83,7 +79,6 @@ export default function UserProfile() {
         role: form.role
       };
       localStorage.setItem("clients", JSON.stringify(clients));
-      // Always get the latest client from storage
       const updatedClients = getClients();
       setClient(updatedClients[idx]);
       setEditOrgDetails(false);
@@ -97,7 +92,7 @@ export default function UserProfile() {
 
   function Breadcrumb() {
     return (
-      <nav className="text-gray-500 mb-4 flex gap-1 text-sm p-3">
+      <nav className="text-gray-500 mb-4 flex gap-1 text-sm p-3 bg-gray-100">
         <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>Dashboard</span>
         <span>/</span>
         <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>Admin</span>
@@ -118,205 +113,246 @@ export default function UserProfile() {
   if (!clientName) return <div>Loading...</div>;
   if (!client) return <div className="p-8 text-center text-gray-500">Client not found.</div>;
 
-
   return (
     <div className="min-h-screen bg-gray-100">
       <Navbar />
       <Breadcrumb />
+      
       <div className="flex gap-6 p-6">
         {/* Left Profile Card */}
-        <div className="w-1/4 bg-white shadow rounded-lg p-4 flex flex-col items-center">
+        <div className="w-80 bg-white shadow-sm rounded-lg p-6 flex flex-col items-center h-fit">
           <img
-            src={client.image || "https://via.placeholder.com/100"}
+            src={client.image || "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"}
             alt="profile"
-            className="w-24 h-24 rounded-full mb-3"
+            className="w-20 h-20 rounded-full mb-4 object-cover"
           />
-          <h2 className="text-lg font-semibold">{`${client.firstName || ''} ${client.lastName || ''}`.trim()}</h2>
-          <p className="text-sm text-gray-500">{client.email}</p>
-          <p className="text-sm text-gray-500">{client.jobTitle ? `Job Title: ${client.jobTitle}` : ''}</p>
-          <p className="text-sm text-gray-500">{client.role ? `Role: ${client.role}` : ''}</p>
-          <p className="text-sm text-gray-500">{client.country ? `Country: ${client.country}` : ''}</p>
-          <span
-            className={`mt-2 px-3 py-1 text-sm rounded-full ${client.status === "active"
-              ? "bg-green-100 text-green-600"
-              : "bg-gray-100 text-gray-600"
-              }`}
-          >
-            {client.status}
+          <h2 className="text-xl font-semibold text-gray-900 mb-1">
+            {`${client.firstName || ''} ${client.lastName || ''}`.trim() || client.name}
+          </h2>
+          <p className="text-sm text-gray-600 mb-3">{client.email}</p>
+          
+          <span className="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700 mb-4">
+            {client.status || 'active'}
           </span>
-          <p className="text-xs text-gray-400 mt-2">
-            Last sign in: {client.lastActive || "-"}
-          </p>
-          <p className="text-xs text-gray-400">Created: {client.joinDate || "-"}</p>
+          
+          <div className="text-xs text-gray-500 text-center mb-6">
+            <p>Last sign in: {client.lastActive || '40 minutes ago'}</p>
+            <p>Created: {client.joinDate || 'June 15 2021'}</p>
+          </div>
 
-          <div className="w-full mt-4 border-t pt-3 text-sm">
-            <p className="font-semibold">Organizational Unit</p>
-            <p className="text-gray-600 mb-4">
-              {client.orgUnit || client.company || "-"}
-            </p>
+          <div className="w-full border-t pt-4">
+            <div className="mb-6">
+              <p className="text-sm font-semibold text-gray-900 mb-1">Organizational Unit</p>
+              <p className="text-sm text-gray-600">{client.orgUnit || client.company || 'Enoch.app'}</p>
+            </div>
 
-            <ul className="space-y-2 font-semibold text-gray-700">
-              <li>RESEND SIGN IN INFO</li>
-              <li>RESET PASSWORD</li>
-              <li className="text-gray-400">SUSPEND USER</li>
-              <li>RESTORE DATA</li>
-              <li className="text-gray-400">DELETE USER</li>
-            </ul>
+            <div className="space-y-3 text-sm font-semibold text-gray-700">
+              <div className="cursor-pointer hover:text-gray-900">RESEND SIGN IN INFO</div>
+              <div className="cursor-pointer hover:text-gray-900">RESET PASSWORD</div>
+              <div className="text-gray-400">SUSPEND USER</div>
+              <div className="cursor-pointer hover:text-gray-900">RESTORE DATA</div>
+              <div className="text-gray-400">DELETE USER</div>
+            </div>
 
-            <div className="mt-4">
-              <p className="font-semibold">CHANGE 2FA METHOD</p>
-              <p className="text-xs text-gray-500">APP AUTHENTICATOR</p>
-              <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-green-100 text-green-600 rounded-full">
+            <div className="mt-6 pt-4 border-t">
+              <p className="text-sm font-semibold text-gray-900 mb-2">CHANGE 2FA METHOD</p>
+              <p className="text-xs text-gray-500 mb-1">APP AUTHENTICATOR</p>
+              <span className="inline-block px-2 py-1 text-xs bg-green-100 text-green-700 rounded-full font-medium">
                 enabled
               </span>
             </div>
 
-            <div className="mt-4 font-semibold">CHANGE ORGANIZATIONAL UNIT</div>
+            <div className="mt-4 text-sm font-semibold text-gray-700 cursor-pointer hover:text-gray-900">
+              CHANGE ORGANIZATIONAL UNIT
+            </div>
           </div>
         </div>
 
         {/* Middle User Information */}
-        <div className="w-1/3 bg-white shadow rounded-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">User Information</h3>
+        <div className="flex-1 bg-white shadow-sm rounded-lg p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">User Information</h3>
             {!editUserInfo && (
-              <button className="text-blue-500 font-semibold" onClick={handleEditUserInfo}>EDIT</button>
+              <button 
+                className="text-blue-500 font-semibold text-sm hover:text-blue-600" 
+                onClick={handleEditUserInfo}
+              >
+                EDIT
+              </button>
             )}
           </div>
-          <div className="space-y-4 text-sm">
+          
+          <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-600 mb-1">First Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
                 <input
                   type="text"
                   name="firstName"
                   value={form.firstName || client.firstName || ""}
                   onChange={handleChange}
                   readOnly={!editUserInfo}
-                  className={`p-2 border rounded w-full ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                    !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
               <div>
-                <label className="block text-gray-600 mb-1">Last Name</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
                 <input
                   type="text"
                   name="lastName"
                   value={form.lastName || client.lastName || ""}
                   onChange={handleChange}
                   readOnly={!editUserInfo}
-                  className={`p-2 border rounded w-full ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                    !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-gray-600 mb-1">Email</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
               <input
                 type="email"
                 name="email"
                 value={form.email || client.email}
                 onChange={handleChange}
                 readOnly={!editUserInfo}
-                className={`w-full p-2 border rounded ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                  !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-600 mb-1">Organization / Company</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Organization / Company</label>
                 <input
                   type="text"
                   name="company"
                   value={form.company || client.company || ""}
                   onChange={handleChange}
                   readOnly={!editUserInfo}
-                  className={`p-2 border rounded w-full ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                    !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
               <div>
-                <label className="block text-gray-600 mb-1">Department</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
                 <input
                   type="text"
                   name="department"
                   value={form.department || client.department || client.jobTitle || ""}
                   onChange={handleChange}
                   readOnly={!editUserInfo}
-                  className={`p-2 border rounded w-full ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                    !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-gray-600 mb-1">Phone</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
               <input
                 type="text"
                 name="phone"
                 value={form.phone || client.phone || ""}
                 onChange={handleChange}
                 readOnly={!editUserInfo}
-                className={`w-full p-2 border rounded ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                  !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
 
             <div>
-              <label className="block text-gray-600 mb-1">Address / Country</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Address / Country</label>
               <input
                 type="text"
                 name="country"
                 value={form.country || client.country || client.address || ""}
                 onChange={handleChange}
                 readOnly={!editUserInfo}
-                className={`w-full p-2 border rounded ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                  !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
+
             {editUserInfo && (
-              <div className="flex gap-4 mt-4">
-                <button className="bg-gray-200 px-4 py-2 rounded" onClick={handleCancelUserInfo}>Cancel</button>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleSaveUserInfo}>Save</button>
+              <div className="flex gap-3 pt-4">
+                <button 
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors" 
+                  onClick={handleCancelUserInfo}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors" 
+                  onClick={handleSaveUserInfo}
+                >
+                  Save
+                </button>
               </div>
             )}
           </div>
         </div>
 
         {/* Right Organizational Details */}
-        <div className="w-1/3 bg-white shadow rounded-lg p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold">Organizational Details</h3>
+        <div className="w-80 bg-white shadow-sm rounded-lg p-6">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-lg font-semibold text-gray-900">Organizational Details</h3>
             {!editOrgDetails && (
-              <button className="text-blue-500 font-semibold" onClick={handleEditOrgDetails}>EDIT</button>
+              <button 
+                className="text-blue-500 font-semibold text-sm hover:text-blue-600" 
+                onClick={handleEditOrgDetails}
+              >
+                EDIT
+              </button>
             )}
           </div>
-          <div className="space-y-4 text-sm">
+          
+          <div className="space-y-4">
             <div>
-              <label className="block text-gray-600 mb-1">Job Title</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
               <input
                 type="text"
                 name="jobTitle"
                 value={form.jobTitle || client.jobTitle || ""}
                 onChange={handleChange}
                 readOnly={!editOrgDetails}
-                className={`w-full p-2 border rounded ${!editOrgDetails ? "bg-gray-100" : "bg-white"}`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                  !editOrgDetails ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
+            
             <div>
-              <label className="block text-gray-600 mb-1">Role</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
               <input
                 type="text"
                 name="role"
                 value={form.role || client.role || ""}
                 onChange={handleChange}
                 readOnly={!editOrgDetails}
-                className={`w-full p-2 border rounded ${!editOrgDetails ? "bg-gray-100" : "bg-white"}`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
+                  !editOrgDetails ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
+            
             <div>
-              <label className="block text-gray-600 mb-1">Permissions</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Permissions</label>
               <div className="flex flex-wrap gap-2">
                 {(client.permissions || ["Permission 1", "Permission 2", "Permission 3"]).map(
                   (perm, idx) => (
                     <span
                       key={idx}
-                      className="px-3 py-1 text-xs bg-gray-200 rounded"
+                      className="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full"
                     >
                       {perm}
                     </span>
@@ -324,10 +360,21 @@ export default function UserProfile() {
                 )}
               </div>
             </div>
+
             {editOrgDetails && (
-              <div className="flex gap-4 mt-4">
-                <button className="bg-gray-200 px-4 py-2 rounded" onClick={handleCancelOrgDetails}>Cancel</button>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleSaveOrgDetails}>Save</button>
+              <div className="flex gap-3 pt-4">
+                <button 
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors" 
+                  onClick={handleCancelOrgDetails}
+                >
+                  Cancel
+                </button>
+                <button 
+                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors" 
+                  onClick={handleSaveOrgDetails}
+                >
+                  Save
+                </button>
               </div>
             )}
           </div>
