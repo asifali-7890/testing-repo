@@ -2,7 +2,7 @@
 import { useState } from "react";
 import NewUserPopup from "./NewUserPopup.jsx";
 
-export default function AddClientForm({ onAddClient }) {
+export default function AddClientForm({ onAddClient, onClose }) {
 
     const [showPopup, setShowPopup] = useState(false);
 
@@ -142,6 +142,7 @@ export default function AddClientForm({ onAddClient }) {
                 <button
                     type="button"
                     className="border px-4 py-2 rounded hover:bg-gray-100"
+                    onClick={onClose} // <-- Add this if you have an onClose prop
                 >
                     Cancel
                 </button>

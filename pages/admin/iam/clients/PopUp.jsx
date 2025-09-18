@@ -53,7 +53,7 @@ export default function PopUp({ onClose, setClients }) {
                         </button>
 
                         {/* Form */}
-                        <AddClientForm onAddClient={handleAddClient} />
+                        <AddClientForm onAddClient={handleAddClient} onClose={onClose} />
                     </div>
                 </div>
             )}

@@ -1,21 +1,25 @@
 
 import Home from '../app/components/Home.jsx';
 import { useRouter } from "next/navigation";
-
-function Breadcrumb() {
-  const router = useRouter();
-  return (
-    <nav className="text-gray-500 mb-4 flex gap-1 text-sm">
-      <span className="text-gray-400">Dashboard</span>
-    </nav>
-  );
-}
+import { useEffect, useState } from "react";
 
 export default function IndexPage() {
-  return (
-    <>
-      {/* <Breadcrumb /> */}
-      <Home />
-    </>
-  );
+  const router = useRouter();
+  const [checked, setChecked] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+      setIsLoggedIn(loggedIn);
+      setChecked(true);
+      if (loggedIn) {
+        router.push("/admin");
+      }
+    }
+  }, [router]);
+
+  if (!checked) return null;
+  if (isLoggedIn) return null;
+  return <Home />;
 }
