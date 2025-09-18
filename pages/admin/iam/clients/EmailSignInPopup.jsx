@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 
-export default function EmailSignInPopup({ isOpen, onClose }) {
+export default function EmailSignInPopup({ isOpen, onClose, client }) {
     const [message, setMessage] = useState("");
     const [sendCopy, setSendCopy] = useState(false);
 
@@ -22,7 +22,7 @@ export default function EmailSignInPopup({ isOpen, onClose }) {
                 <h2 className="text-lg font-semibold text-gray-800 mb-1">
                     EMAIL SIGN-IN INFO
                 </h2>
-                <p className="text-gray-600 text-sm mb-4">Regina Cooper</p>
+                <p className="text-gray-600 text-sm mb-4">{client?.name || "-"}</p>
 
                 {/* Message Input */}
                 <textarea
@@ -57,7 +57,7 @@ export default function EmailSignInPopup({ isOpen, onClose }) {
 
                 {/* Email Preview */}
                 <div className="border rounded p-3 text-sm text-gray-700 mt-3 bg-gray-50">
-                    <p>Hello Regina,</p>
+                    <p>Hello {client?.name || "-"},</p>
                     <p className="mt-2">
                         You have a new Enoch account with the Enoch.dapp organization.
                     </p>
@@ -68,7 +68,7 @@ export default function EmailSignInPopup({ isOpen, onClose }) {
                     <p className="mt-2">
                         <strong>Your username</strong>
                         <br />
-                        reginacooper01@gmail.com
+                        {client?.email || "-"}
                     </p>
                     <p className="mt-2">
                         <strong>Your password</strong>

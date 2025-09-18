@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-export default function NewUserPopup({ isOpen, onClose, onEmailSignIn }) {
+export default function NewUserPopup({ isOpen, onClose, onEmailSignIn, client }) {
     if (!isOpen) return null; // Don't render if popup is closed
 
     return (
@@ -27,12 +27,12 @@ export default function NewUserPopup({ isOpen, onClose, onEmailSignIn }) {
                 {/* Avatar + Name */}
                 <div className="flex flex-col items-center">
                     <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-2xl">
-                        🖼️
+                        {client?.image ? <img src={client.image} alt="avatar" className="w-16 h-16 rounded-full object-cover" /> : "🖼️"}
                     </div>
                     <h3 className="text-lg font-medium text-gray-900 mt-3">
-                        Regina Cooper
+                        {client?.name || "-"}
                     </h3>
-                    <p className="text-gray-500 text-sm">reginacooper01@gmail.com</p>
+                    <p className="text-gray-500 text-sm">{client?.email || "-"}</p>
                 </div>
 
                 {/* Password Section */}
@@ -48,7 +48,7 @@ export default function NewUserPopup({ isOpen, onClose, onEmailSignIn }) {
                         COPY PASSWORD
                     </button>
                     <p className="text-xs text-gray-400 mt-2">
-                        This password will need to be changed once Regina signs into the account.
+                        This password will need to be changed once {client?.name || "the user"} signs into the account.
                     </p>
                 </div>
 

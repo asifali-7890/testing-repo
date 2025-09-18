@@ -1,231 +1,338 @@
-import ProtectedRoute from '../../../../../components/ProtectedRoute';
-import Navigation from '../../../../../components/Navigation';
+import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
-import { ArrowLeft, User, Mail, Phone, MapPin, Building, Calendar, Edit, Trash2 } from 'lucide-react';
+import Navbar from '../../../../../components/Navbar.jsx';
+import { getClients } from '/utils/storage.js';
 
-export default function ClientProfile() {
+
+export default function UserProfile() {
   const router = useRouter();
   const { clientName } = router.query;
+  const [client, setClient] = useState(null);
+  const [editUserInfo, setEditUserInfo] = useState(false);
+  const [editOrgDetails, setEditOrgDetails] = useState(false);
+  const [form, setForm] = useState({});
 
-  // Mock client data - in a real app, this would be fetched from an API
-  const clientData = {
-    name: decodeURIComponent(clientName || ''),
-    email: 'john.doe@example.com',
-    phone: '(555) 123-4567',
-    company: 'Acme Corporation',
-    address: '123 Main St, New York, NY 10001',
-    joinDate: '2024-01-15',
-    lastActive: '2024-01-20',
-    status: 'active',
-    projects: 3,
-    notes: 'VIP client with premium support package. Prefers email communication.'
+  useEffect(() => {
+    if (clientName) {
+      const clients = getClients();
+      const decodedName = decodeURIComponent(clientName);
+      const found = clients.find(c => {
+        // Prefer firstName/lastName match, fallback to name
+        const fullName = `${c.firstName || ''} ${c.lastName || ''}`.trim();
+        return (fullName === decodedName) || (c.name === decodedName);
+      });
+      setClient(found || null);
+      setForm(found || {});
+    }
+  }, [clientName]);
+
+  const handleEditUserInfo = () => setEditUserInfo(true);
+  const handleCancelUserInfo = () => {
+    setEditUserInfo(false);
+    setForm(client || {});
   };
-
-  const handleBack = () => {
-    router.push('/admin/iam/clients');
-  };
-
-  const handleEdit = () => {
-    // In a real app, this would navigate to an edit form
-    alert('Edit functionality would be implemented here');
-  };
-
-  const handleDelete = () => {
-    // In a real app, this would show a confirmation modal
-    if (confirm(`Are you sure you want to delete ${clientData.name}?`)) {
-      alert('Delete functionality would be implemented here');
-      router.push('/admin/iam/clients');
+  const handleSaveUserInfo = () => {
+    const clients = getClients();
+    const idx = clients.findIndex(c => c.id === client.id);
+    // Check for unique email
+    const emailExists = clients.some((c, i) => c.email === form.email && i !== idx);
+    if (emailExists) {
+      alert("Email must be unique for every client.");
+      return;
+    }
+    if (idx !== -1) {
+      // If firstName or lastName is changed, update and redirect
+      const oldFullName = `${clients[idx].firstName || ''} ${clients[idx].lastName || ''}`.trim();
+      const newFirstName = form.firstName || clients[idx].firstName || '';
+      const newLastName = form.lastName || clients[idx].lastName || '';
+      const newFullName = `${newFirstName} ${newLastName}`.trim();
+      clients[idx] = {
+        ...clients[idx],
+        firstName: newFirstName,
+        lastName: newLastName,
+        name: newFullName,
+        email: form.email,
+        company: form.company,
+        department: form.department,
+        phone: form.phone,
+        country: form.country
+      };
+      localStorage.setItem("clients", JSON.stringify(clients));
+      const updatedClients = getClients();
+      setClient(updatedClients[idx]);
+      setForm(updatedClients[idx]);
+      setEditUserInfo(false);
+      if (oldFullName !== newFullName) {
+        router.replace(`/admin/iam/clients/profile/${encodeURIComponent(newFullName)}`);
+      }
     }
   };
 
-  if (!clientName) {
-    return <div>Loading...</div>;
+  const handleEditOrgDetails = () => setEditOrgDetails(true);
+  const handleCancelOrgDetails = () => {
+    setEditOrgDetails(false);
+    setForm(client || {});
+  };
+  const handleSaveOrgDetails = () => {
+    const clients = getClients();
+    const idx = clients.findIndex(c => decodeURIComponent(c.name) === decodeURIComponent(clientName));
+    if (idx !== -1) {
+      clients[idx] = {
+        ...clients[idx],
+        jobTitle: form.jobTitle,
+        role: form.role
+      };
+      localStorage.setItem("clients", JSON.stringify(clients));
+      // Always get the latest client from storage
+      const updatedClients = getClients();
+      setClient(updatedClients[idx]);
+      setEditOrgDetails(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm(f => ({ ...f, [name]: value }));
+  };
+
+  function Breadcrumb() {
+    return (
+      <nav className="text-gray-500 mb-4 flex gap-1 text-sm p-3">
+        <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>Dashboard</span>
+        <span>/</span>
+        <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>Admin</span>
+        <span>/</span>
+        <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>home</span>
+        <span>/</span>
+        <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin/iam")}>I am</span>
+        <span>/</span>
+        <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin/iam/clients")}>Clients</span>
+        <span>/</span>
+        <span className="text-gray-400">Profile</span>
+        <span>/</span>
+        <span className="text-gray-900 font-semibold">{decodeURIComponent(clientName || '')}</span>
+      </nav>
+    );
   }
 
+  if (!clientName) return <div>Loading...</div>;
+  if (!client) return <div className="p-8 text-center text-gray-500">Client not found.</div>;
+
+
   return (
-    <ProtectedRoute requireAdmin={true}>
-      <div className="min-h-screen bg-gray-50">
-        <Navigation />
-        
-        <main className="max-w-4xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="px-4 py-6 sm:px-0">
-            <div className="mb-8">
-              <button
-                onClick={handleBack}
-                className="inline-flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors duration-200"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span>Back to Clients</span>
-              </button>
-              
-              <div className="flex justify-between items-start">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Client Profile</h1>
-                  <p className="mt-2 text-gray-600">Detailed information for {clientData.name}</p>
-                </div>
-                
-                <div className="flex space-x-3">
-                  <button
-                    onClick={handleEdit}
-                    className="inline-flex items-center space-x-2 px-4 py-2 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors duration-200 font-medium"
-                  >
-                    <Edit className="h-4 w-4" />
-                    <span>Edit</span>
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="inline-flex items-center space-x-2 px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors duration-200 font-medium"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    <span>Delete</span>
-                  </button>
-                </div>
-              </div>
+    <div className="min-h-screen bg-gray-100">
+      <Navbar />
+      <Breadcrumb />
+      <div className="flex gap-6 p-6">
+        {/* Left Profile Card */}
+        <div className="w-1/4 bg-white shadow rounded-lg p-4 flex flex-col items-center">
+          <img
+            src={client.image || "https://via.placeholder.com/100"}
+            alt="profile"
+            className="w-24 h-24 rounded-full mb-3"
+          />
+          <h2 className="text-lg font-semibold">{`${client.firstName || ''} ${client.lastName || ''}`.trim()}</h2>
+          <p className="text-sm text-gray-500">{client.email}</p>
+          <p className="text-sm text-gray-500">{client.jobTitle ? `Job Title: ${client.jobTitle}` : ''}</p>
+          <p className="text-sm text-gray-500">{client.role ? `Role: ${client.role}` : ''}</p>
+          <p className="text-sm text-gray-500">{client.country ? `Country: ${client.country}` : ''}</p>
+          <span
+            className={`mt-2 px-3 py-1 text-sm rounded-full ${client.status === "active"
+              ? "bg-green-100 text-green-600"
+              : "bg-gray-100 text-gray-600"
+              }`}
+          >
+            {client.status}
+          </span>
+          <p className="text-xs text-gray-400 mt-2">
+            Last sign in: {client.lastActive || "-"}
+          </p>
+          <p className="text-xs text-gray-400">Created: {client.joinDate || "-"}</p>
+
+          <div className="w-full mt-4 border-t pt-3 text-sm">
+            <p className="font-semibold">Organizational Unit</p>
+            <p className="text-gray-600 mb-4">
+              {client.orgUnit || client.company || "-"}
+            </p>
+
+            <ul className="space-y-2 font-semibold text-gray-700">
+              <li>RESEND SIGN IN INFO</li>
+              <li>RESET PASSWORD</li>
+              <li className="text-gray-400">SUSPEND USER</li>
+              <li>RESTORE DATA</li>
+              <li className="text-gray-400">DELETE USER</li>
+            </ul>
+
+            <div className="mt-4">
+              <p className="font-semibold">CHANGE 2FA METHOD</p>
+              <p className="text-xs text-gray-500">APP AUTHENTICATOR</p>
+              <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-green-100 text-green-600 rounded-full">
+                enabled
+              </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Main Profile Info */}
-              <div className="lg:col-span-2">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center space-x-4 mb-6">
-                    <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                      <User className="h-8 w-8 text-blue-600" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-gray-900">{clientData.name}</h2>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          clientData.status === 'active' 
-                            ? 'bg-green-100 text-green-800' 
-                            : 'bg-gray-100 text-gray-800'
-                        }`}>
-                          {clientData.status}
-                        </span>
-                        <span className="text-sm text-gray-500">#{clientData.name.toLowerCase().replace(/\s+/g, '')}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3">
-                        <Mail className="h-5 w-5 text-gray-400" />
-                        <div>
-                          <div className="text-sm text-gray-500">Email</div>
-                          <div className="font-medium text-gray-900">{clientData.email}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <Phone className="h-5 w-5 text-gray-400" />
-                        <div>
-                          <div className="text-sm text-gray-500">Phone</div>
-                          <div className="font-medium text-gray-900">{clientData.phone}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <Building className="h-5 w-5 text-gray-400" />
-                        <div>
-                          <div className="text-sm text-gray-500">Company</div>
-                          <div className="font-medium text-gray-900">{clientData.company}</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="flex items-center space-x-3">
-                        <MapPin className="h-5 w-5 text-gray-400" />
-                        <div>
-                          <div className="text-sm text-gray-500">Address</div>
-                          <div className="font-medium text-gray-900">{clientData.address}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <Calendar className="h-5 w-5 text-gray-400" />
-                        <div>
-                          <div className="text-sm text-gray-500">Join Date</div>
-                          <div className="font-medium text-gray-900">{clientData.joinDate}</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-3">
-                        <Calendar className="h-5 w-5 text-gray-400" />
-                        <div>
-                          <div className="text-sm text-gray-500">Last Active</div>
-                          <div className="font-medium text-gray-900">{clientData.lastActive}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {clientData.notes && (
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-3">Notes</h3>
-                      <p className="text-gray-600 leading-relaxed">{clientData.notes}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Sidebar Stats */}
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <div className="text-2xl font-bold text-blue-600">{clientData.projects}</div>
-                      <div className="text-sm text-blue-800">Active Projects</div>
-                    </div>
-                    
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <div className="text-2xl font-bold text-green-600">$12,450</div>
-                      <div className="text-sm text-green-800">Total Revenue</div>
-                    </div>
-                    
-                    <div className="text-center p-4 bg-purple-50 rounded-lg">
-                      <div className="text-2xl font-bold text-purple-600">98%</div>
-                      <div className="text-sm text-purple-800">Satisfaction Score</div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
-                  
-                  <div className="space-y-3">
-                    <div className="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg">
-                      <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-xs text-gray-600">Project updated</p>
-                        <p className="text-xs text-gray-500">2 hours ago</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg">
-                      <div className="w-2 h-2 bg-green-600 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-xs text-gray-600">Payment received</p>
-                        <p className="text-xs text-gray-500">1 day ago</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg">
-                      <div className="w-2 h-2 bg-yellow-600 rounded-full"></div>
-                      <div className="flex-1">
-                        <p className="text-xs text-gray-600">Meeting scheduled</p>
-                        <p className="text-xs text-gray-500">3 days ago</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div className="mt-4 font-semibold">CHANGE ORGANIZATIONAL UNIT</div>
           </div>
-        </main>
+        </div>
+
+        {/* Middle User Information */}
+        <div className="w-1/3 bg-white shadow rounded-lg p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">User Information</h3>
+            {!editUserInfo && (
+              <button className="text-blue-500 font-semibold" onClick={handleEditUserInfo}>EDIT</button>
+            )}
+          </div>
+          <div className="space-y-4 text-sm">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-600 mb-1">First Name</label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={form.firstName || client.firstName || ""}
+                  onChange={handleChange}
+                  readOnly={!editUserInfo}
+                  className={`p-2 border rounded w-full ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 mb-1">Last Name</label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={form.lastName || client.lastName || ""}
+                  onChange={handleChange}
+                  readOnly={!editUserInfo}
+                  className={`p-2 border rounded w-full ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-600 mb-1">Email</label>
+              <input
+                type="email"
+                name="email"
+                value={form.email || client.email}
+                onChange={handleChange}
+                readOnly={!editUserInfo}
+                className={`w-full p-2 border rounded ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-600 mb-1">Organization / Company</label>
+                <input
+                  type="text"
+                  name="company"
+                  value={form.company || client.company || ""}
+                  onChange={handleChange}
+                  readOnly={!editUserInfo}
+                  className={`p-2 border rounded w-full ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 mb-1">Department</label>
+                <input
+                  type="text"
+                  name="department"
+                  value={form.department || client.department || client.jobTitle || ""}
+                  onChange={handleChange}
+                  readOnly={!editUserInfo}
+                  className={`p-2 border rounded w-full ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+                />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-gray-600 mb-1">Phone</label>
+              <input
+                type="text"
+                name="phone"
+                value={form.phone || client.phone || ""}
+                onChange={handleChange}
+                readOnly={!editUserInfo}
+                className={`w-full p-2 border rounded ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-600 mb-1">Address / Country</label>
+              <input
+                type="text"
+                name="country"
+                value={form.country || client.country || client.address || ""}
+                onChange={handleChange}
+                readOnly={!editUserInfo}
+                className={`w-full p-2 border rounded ${!editUserInfo ? "bg-gray-100" : "bg-white"}`}
+              />
+            </div>
+            {editUserInfo && (
+              <div className="flex gap-4 mt-4">
+                <button className="bg-gray-200 px-4 py-2 rounded" onClick={handleCancelUserInfo}>Cancel</button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleSaveUserInfo}>Save</button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Right Organizational Details */}
+        <div className="w-1/3 bg-white shadow rounded-lg p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Organizational Details</h3>
+            {!editOrgDetails && (
+              <button className="text-blue-500 font-semibold" onClick={handleEditOrgDetails}>EDIT</button>
+            )}
+          </div>
+          <div className="space-y-4 text-sm">
+            <div>
+              <label className="block text-gray-600 mb-1">Job Title</label>
+              <input
+                type="text"
+                name="jobTitle"
+                value={form.jobTitle || client.jobTitle || ""}
+                onChange={handleChange}
+                readOnly={!editOrgDetails}
+                className={`w-full p-2 border rounded ${!editOrgDetails ? "bg-gray-100" : "bg-white"}`}
+              />
+            </div>
+            <div>
+              <label className="block text-gray-600 mb-1">Role</label>
+              <input
+                type="text"
+                name="role"
+                value={form.role || client.role || ""}
+                onChange={handleChange}
+                readOnly={!editOrgDetails}
+                className={`w-full p-2 border rounded ${!editOrgDetails ? "bg-gray-100" : "bg-white"}`}
+              />
+            </div>
+            <div>
+              <label className="block text-gray-600 mb-1">Permissions</label>
+              <div className="flex flex-wrap gap-2">
+                {(client.permissions || ["Permission 1", "Permission 2", "Permission 3"]).map(
+                  (perm, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1 text-xs bg-gray-200 rounded"
+                    >
+                      {perm}
+                    </span>
+                  )
+                )}
+              </div>
+            </div>
+            {editOrgDetails && (
+              <div className="flex gap-4 mt-4">
+                <button className="bg-gray-200 px-4 py-2 rounded" onClick={handleCancelOrgDetails}>Cancel</button>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={handleSaveOrgDetails}>Save</button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </ProtectedRoute>
+    </div>
   );
 }

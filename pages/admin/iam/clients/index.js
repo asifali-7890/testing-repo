@@ -1,9 +1,11 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import PopUp from "./PopUp.jsx";
-import { getClients, deleteClient } from "/utils/storage.js";
+import AssignRolePopup from "./AssignRolePopup.jsx";
+import { getClients, deleteClient, saveClients } from "/utils/storage.js";
 import { useRouter } from "next/navigation";
 import Navbar from "../../../../components/Navbar.jsx";
+import DeleteConfirmationModal from "../../../../components/DeleteConfirmationModal.jsx";
 
 function Breadcrumb() {
   const router = useRouter();
@@ -43,17 +45,45 @@ function Breadcrumb() {
 }
 
 const ClientsPage = () => {
+  const [assignRoleClientId, setAssignRoleClientId] = useState(null);
   const [activeTab, setActiveTab] = useState("clients");
   const [showPopup, setShowPopup] = useState(false);
   const [clients, setClients] = useState([]);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [clientToDelete, setClientToDelete] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     setClients(getClients());
   }, []);
 
   const handleDelete = (id) => {
-    deleteClient(id);
-    setClients(getClients());
+    setClientToDelete(id);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (clientToDelete) {
+      deleteClient(clientToDelete);
+      setClients(getClients());
+      setDeleteModalOpen(false);
+      setClientToDelete(null);
+    }
+  };
+
+  const cancelDelete = () => {
+    setDeleteModalOpen(false);
+    setClientToDelete(null);
+  };
+
+  const handleEnable = (id) => {
+    const updated = getClients().map(c => c.id === id ? { ...c, status: "enabled" } : c);
+    saveClients(updated);
+    setClients(updated);
+  };
+
+  const handlePermission = (id) => {
+    setAssignRoleClientId(id);
   };
 
   // Lock scroll when popup is open
@@ -65,11 +95,12 @@ const ClientsPage = () => {
     }
   }, [showPopup]);
 
+  const [openMenuId, setOpenMenuId] = useState(null);
+
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-gray-50 p-6">
-
         <Breadcrumb />
         {/* 🔹 Header */}
         <div className="flex items-center justify-between mb-6">
@@ -83,7 +114,6 @@ const ClientsPage = () => {
             Add new Client
           </button>
         </div>
-
         {/* 🔹 Tabs */}
         <div className="border-b mb-4 flex space-x-6 text-sm font-medium">
           <button
@@ -105,53 +135,98 @@ const ClientsPage = () => {
             Roles
           </button>
         </div>
-
         {/* 🔹 Table */}
         {activeTab === "clients" && (
-          <div className="bg-white rounded border">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-100 text-left">
-                <tr>
-                  <th className="p-3">Team</th>
-                  <th className="p-3">Member</th>
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Job title</th>
-                  <th className="p-3">Role</th>
-                  <th className="p-3">Inheritance</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {clients.map((c) => (
-                  <tr key={c.id} className="border-t hover:bg-gray-50">
-                    <td className="p-3">
-                      <input type="checkbox" />
-                    </td>
-                    <td className="p-3 text-gray-700">{c.member || c.email}</td>
-                    <td className="p-3 text-blue-600 font-medium cursor-pointer hover:underline">{c.name}</td>
-                    <td className="p-3">{c.jobTitle || '-'}</td>
-                    <td className="p-3">{c.role || '-'}</td>
-                    <td className="p-3">{c.inheritance ? "✏️" : "-"}</td>
-                    <td className="p-3">
-                      <span className={`px-2 py-1 rounded text-xs ${c.status === "active" ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700"}`}>{c.status || '-'}</span>
-                    </td>
-                    <td className="p-3">
-                      <div className="relative group inline-block">
-                        <button className="px-2 py-1 text-gray-600 hover:text-black">⋮</button>
-                        <div className="absolute hidden group-hover:block right-0 mt-1 w-32 bg-white border rounded shadow z-10">
-                          <button onClick={() => handleDelete(c.id)} className="block w-full text-left px-3 py-2 hover:bg-gray-100">Delete</button>
-                          <button className="block w-full text-left px-3 py-2 hover:bg-gray-100">Enable</button>
-                          <button className="block w-full text-left px-3 py-2 hover:bg-gray-100">Permission</button>
-                          <button className="block w-full text-left px-3 py-2 hover:bg-gray-100">Profile</button>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <>
+            {clients.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-96">
+                <div className="grid grid-cols-2 gap-6 mb-8">
+                  <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span className="text-6xl">🧑</span>
+                  </div>
+                  <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span className="text-6xl">👩</span>
+                  </div>
+                  <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span className="text-6xl">🧑‍🦱</span>
+                  </div>
+                  <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
+                    <span className="text-6xl">👨‍🦰</span>
+                  </div>
+                </div>
+                <div className="text-4xl font-semibold text-gray-500">No client added</div>
+              </div>
+
+            ) : (
+              <div className="bg-white rounded border">
+                <table className="w-full text-sm">
+                  <thead className="bg-gray-100 text-left">
+                    <tr>
+                      <th className="p-3">Team</th>
+                      <th className="p-3">Member</th>
+                      <th className="p-3">Name</th>
+                      <th className="p-3">Job title</th>
+                      <th className="p-3">Role</th>
+                      <th className="p-3">Country</th>
+                      <th className="p-3">Inheritance</th>
+                      <th className="p-3">Status</th>
+                      <th className="p-3">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {clients.map((c) => (
+                      <tr key={c.id} className="border-t hover:bg-gray-50">
+                        <td className="p-3">
+                          <input type="checkbox" />
+                        </td>
+                        <td className="p-3 text-gray-700">{c.member || c.email}</td>
+                        <td className="p-3 text-blue-600 font-medium cursor-pointer hover:underline">{c.name}</td>
+                        <td className="p-3">{c.jobTitle || '-'}</td>
+                        <td className="p-3">{c.role || '-'}</td>
+                        <td className="p-3">{c.country || '-'}</td>
+                        <td className="p-3">{Array.isArray(c.permissions) && c.permissions.length > 0 ? c.permissions.join(", ") : '-'}</td>
+                        <td className="p-3">
+                          <span
+                            className={`px-2 py-1 rounded text-xs
+                              ${c.status === "enabled" ? "bg-green-100 text-green-700"
+                                : c.status === "active" ? "bg-blue-100 text-blue-700"
+                                  : c.status === "permission" ? "bg-blue-200 text-blue-800"
+                                    : "bg-gray-100 text-gray-500"}
+                            `}
+                          >
+                            {c.status || '-'}
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <div className="relative inline-block">
+                            <button
+                              className="px-2 py-1 text-gray-600 hover:text-black"
+                              onClick={() => setOpenMenuId(openMenuId === c.id ? null : c.id)}
+                            >
+                              ⋮
+                            </button>
+                            {openMenuId === c.id && (
+                              <div className="absolute right-0 mt-1 w-32 bg-white border rounded shadow z-10">
+                                <button onClick={() => { handleDelete(c.id); setOpenMenuId(null); }} className="block w-full text-left px-3 py-2 hover:bg-gray-100">Delete</button>
+                                <button onClick={() => { handleEnable(c.id); setOpenMenuId(null); }} className="block w-full text-left px-3 py-2 hover:bg-gray-100">Enable</button>
+                                <button onClick={() => { handlePermission(c.id); setOpenMenuId(null); }} className="block w-full text-left px-3 py-2 hover:bg-gray-100">Permission</button>
+                                <button onClick={() => { router.push(`/admin/iam/clients/profile/${encodeURIComponent(c.name)}`); setOpenMenuId(null); }} className="block w-full text-left px-3 py-2 hover:bg-gray-100">Profile</button>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            <DeleteConfirmationModal
+              isOpen={deleteModalOpen}
+              onCancel={cancelDelete}
+              onConfirm={confirmDelete}
+            />
+          </>
         )}
 
         {activeTab === "roles" && (
@@ -161,6 +236,29 @@ const ClientsPage = () => {
         )}
 
         {showPopup && <PopUp onClose={() => setShowPopup(false)} setClients={setClients} />}
+        {assignRoleClientId && (
+          <AssignRolePopup
+            isOpen={true}
+            client={clients.find(c => c.id === assignRoleClientId)}
+            onClose={() => setAssignRoleClientId(null)}
+            onSave={({ jobTitle, role, permissions }) => {
+              const updated = getClients().map(c =>
+                c.id === assignRoleClientId
+                  ? {
+                    ...c,
+                    jobTitle: jobTitle !== undefined && jobTitle !== "" ? jobTitle : c.jobTitle,
+                    role: role !== undefined && role !== "" ? role : c.role,
+                    permissions: permissions !== undefined && permissions.length > 0 ? permissions : c.permissions,
+                    status: "permission"
+                  }
+                  : c
+              );
+              saveClients(updated);
+              setClients(updated);
+              setAssignRoleClientId(null);
+            }}
+          />
+        )}
       </div>
     </>
 

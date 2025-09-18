@@ -9,12 +9,14 @@ import { addClient, getClients } from "/utils/storage.js";
 export default function PopUp({ onClose, setClients }) {
     const [showNewUserPopup, setShowNewUserPopup] = useState(false);
     const [showEmailSignInPopup, setShowEmailSignInPopup] = useState(false);
+    const [lastClient, setLastClient] = useState(null);
 
     // Handler for AddClientForm submit
     // Save client and show NewUserPopup
     const handleAddClient = (clientData) => {
         addClient(clientData);
         setClients(getClients()); // update parent state
+        setLastClient(clientData);
         setShowNewUserPopup(true);
     };
 
@@ -61,11 +63,12 @@ export default function PopUp({ onClose, setClients }) {
                     isOpen={true}
                     onClose={handleCloseNewUserPopup}
                     onEmailSignIn={handleOpenEmailSignInPopup}
+                    client={lastClient}
                 />
             )}
             {/* Show EmailSignInPopup modal */}
             {showEmailSignInPopup && (
-                <EmailSignInPopup isOpen={true} onClose={handleCloseEmailSignInPopup} />
+                <EmailSignInPopup isOpen={true} onClose={handleCloseEmailSignInPopup} client={lastClient} />
             )}
         </>
     );

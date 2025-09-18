@@ -7,8 +7,8 @@ export default function AddClientForm({ onAddClient }) {
     const [showPopup, setShowPopup] = useState(false);
 
     const [formData, setFormData] = useState({
-        name: "",
-        surname: "",
+        firstName: "",
+        lastName: "",
         email: "",
         orgUnit: "",
         secondaryEmail: "",
@@ -21,18 +21,31 @@ export default function AddClientForm({ onAddClient }) {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+
     const handlePhotoChange = (e) => {
-        setFormData({ ...formData, photo: e.target.files[0] });
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFormData({ ...formData, photo: reader.result }); // base64 string
+            };
+            reader.readAsDataURL(file);
+        } else {
+            setFormData({ ...formData, photo: null });
+        }
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         // Prepare client data for storage
         const clientData = {
-            name: formData.name,
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            name: `${formData.firstName} ${formData.lastName}`.trim(),
             email: formData.email,
             phone: formData.mobile,
-            image: formData.photo ? URL.createObjectURL(formData.photo) : null,
+            image: formData.photo || null,
+            status: "active"
         };
         if (onAddClient) onAddClient(clientData); // Pass client data up
     };
@@ -54,19 +67,19 @@ export default function AddClientForm({ onAddClient }) {
                 className="w-full text-sm border rounded p-1"
             />
 
-            {/* Name + Surname */}
+            {/* First Name + Last Name */}
             <div className="flex gap-2">
                 <input
-                    name="name"
-                    placeholder="Name"
-                    value={formData.name}
+                    name="firstName"
+                    placeholder="First Name"
+                    value={formData.firstName}
                     onChange={handleChange}
                     className="border p-2 rounded w-1/2"
                 />
                 <input
-                    name="surname"
-                    placeholder="Surname"
-                    value={formData.surname}
+                    name="lastName"
+                    placeholder="Last Name"
+                    value={formData.lastName}
                     onChange={handleChange}
                     className="border p-2 rounded w-1/2"
                 />
