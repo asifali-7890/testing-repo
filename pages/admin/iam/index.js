@@ -11,7 +11,9 @@ function Breadcrumb() {
       <span>/</span>
       <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>Admin</span>
       <span>/</span>
-      <span className="text-gray-400">I am</span>
+      <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>home</span>
+      <span>/</span>
+      <span className="text-gray-400">i am</span>
     </nav>
   );
 }
@@ -23,51 +25,84 @@ const AdminConsole = () => {
     {
       title: "USER",
       actions: ["ADD USER", "DELETE A USER", "UPDATE A USER'S NAME & EMAIL"],
+      icon: "👤"
     },
     {
       title: "BILLING",
       actions: ["ADD USER", "DELETE A USER", "UPDATE A USER'S NAME & EMAIL"],
+      icon: "👤"
     },
     {
       title: "Client",
       actions: ["ADD Client", "DELETE A Client", "UPDATE A Client's NAME & EMAIL"],
       highlight: true,
-      route: "/admin/iam/clients", // 👈 special route for this card
+      route: "/admin/iam/clients",
+      icon: "👤"
     },
-    { title: "GROUPS", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "APPS", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "DEVICES", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "ACCOUNT SETTINGS", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "ORGANIZATIONAL UNITS", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "SECURITY", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "REPORTS", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "BUILDINGS AND RESOURCES", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "RULES", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "ADMIN ROLES", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "DATA MIGRATION", subtitle: "Create groups for mailing lists and applying policies" },
-    { title: "SUPPORT", subtitle: "Create groups for mailing lists and applying policies" },
+    { 
+      title: "GROUPS", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "APPS", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "DEVICES", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "ACCOUNT SETTINGS", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "ORGANIZATIONAL UNITS", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "SECURITY", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "REPORTS", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "BUILDINGS AND RESOURCES", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "RULES", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "ADMIN ROLES", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "DATA MIGRATION", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
+    { 
+      title: "SUPPORT", 
+      subtitle: "Create groups for mailing lists and applying policies",
+      icon: "👥"
+    },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* 🔹 Top Navbar */}
-      {/* <nav className="flex items-center justify-between bg-white shadow px-6 py-3">
-        <div className="flex items-center space-x-4">
-          <span className="font-bold text-xl text-blue-600">🌍 Terra</span>
-          <input
-            type="text"
-            placeholder="Search"
-            className="px-3 py-1 border rounded-md text-sm focus:outline-none focus:ring focus:ring-blue-300"
-          />
-        </div>
-        <div className="flex items-center space-x-4">
-          <button className="text-gray-600 hover:text-gray-900">🔔</button>
-          <button className="text-gray-600 hover:text-gray-900">⚙️</button>
-          <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer">
-            👤
-          </div>
-        </div>
-      </nav> */}
       <Navbar />
 
       <div className="p-6">
@@ -75,10 +110,9 @@ const AdminConsole = () => {
         <Breadcrumb />
 
         {/* 🔹 Welcome Banner */}
-        <div className="bg-white border rounded p-4 mb-6 text-sm text-gray-700">
-          🎉 Welcome to your new Admin console homepage! You’ll find easier
-          navigation and quick access to common user, billing and domain tasks.
-          Stay tuned for more enhancement.
+        <div className="bg-white border rounded-lg p-4 mb-6 text-sm text-gray-700 flex items-center">
+          <span className="text-2xl mr-3">🎉</span>
+          <span>Welcome to your new Admin console homepage! You'll find easier navigation and quick access to common user, billing and domain tasks. Stay tuned for more enhancement.</span>
         </div>
 
         {/* 🔹 Grid of Cards */}
@@ -86,29 +120,32 @@ const AdminConsole = () => {
           {cards.map((card, index) => (
             <div
               key={index}
-              onClick={() => card.route && router.push(card.route)} // 👈 navigate if route exists
-              className={`p-4 border rounded bg-white hover:shadow-md cursor-pointer ${card.highlight ? "border-yellow-400" : "border-gray-200"
-                }`}
+              onClick={() => card.route && router.push(card.route)}
+              className={`p-4 border rounded-lg bg-white hover:shadow-md cursor-pointer transition-shadow ${
+                card.highlight ? "border-yellow-400 bg-yellow-50" : "border-gray-200"
+              }`}
             >
-              <div className="flex items-center mb-2">
-                <span className="mr-2">📦</span>
-                <h3 className="font-bold">{card.title}</h3>
+              <div className="flex items-center mb-3">
+                <div className="w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center mr-3">
+                  <span className="text-orange-600">{card.icon}</span>
+                </div>
+                <h3 className="font-bold text-gray-900">{card.title}</h3>
               </div>
 
               {/* Actions if present */}
               {card.actions ? (
-                <ul className="text-sm text-gray-600 space-y-1">
+                <ul className="text-sm text-gray-600 space-y-1 ml-11">
                   {card.actions.map((action, i) => (
                     <li
                       key={i}
-                      className={i === 0 ? "font-semibold text-black" : ""}
+                      className={i === 0 ? "font-semibold text-gray-900" : "text-gray-600"}
                     >
                       {action}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-gray-500">{card.subtitle}</p>
+                <p className="text-sm text-gray-500 ml-11">{card.subtitle}</p>
               )}
             </div>
           ))}
