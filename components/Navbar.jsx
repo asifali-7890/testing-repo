@@ -35,7 +35,7 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
                 {/* Home Link */}
                 <button
-                    onClick={() => router.push("/admin"); }
+                    onClick={() => router.push("/admin") }
                     className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors font-medium"
                 >
                     <Home className="w-4 h-4" />
