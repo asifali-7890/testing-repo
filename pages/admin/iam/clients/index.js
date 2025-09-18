@@ -167,7 +167,7 @@ const ClientsPage = () => {
                       <th className="p-3">Name</th>
                       <th className="p-3">Job title</th>
                       <th className="p-3">Role</th>
-                      <th className="p-3">Country</th>
+                      {/* <th className="p-3">Country</th> */}
                       <th className="p-3">Inheritance</th>
                       <th className="p-3">Status</th>
                       <th className="p-3">Action</th>
@@ -183,7 +183,7 @@ const ClientsPage = () => {
                         <td className="p-3 text-blue-600 font-medium cursor-pointer hover:underline">{c.name}</td>
                         <td className="p-3">{c.jobTitle || '-'}</td>
                         <td className="p-3">{c.role || '-'}</td>
-                        <td className="p-3">{c.country || '-'}</td>
+                        {/* <td className="p-3">{c.country || '-'}</td> */}
                         <td className="p-3">{Array.isArray(c.permissions) && c.permissions.length > 0 ? c.permissions.join(", ") : '-'}</td>
                         <td className="p-3">
                           <span
