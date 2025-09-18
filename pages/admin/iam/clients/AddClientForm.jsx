@@ -1,10 +1,8 @@
 "use client";
 import { useState } from "react";
-import NewUserPopup from "./NewUserPopup.jsx";
 
 export default function AddClientForm({ onAddClient, onClose }) {
 
-    const [showPopup, setShowPopup] = useState(false);
 
     const [formData, setFormData] = useState({
         firstName: "",
