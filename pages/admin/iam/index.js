@@ -1,5 +1,20 @@
 import React from "react";
 import { useRouter } from "next/router";
+import { useRouter as useNextRouter } from "next/navigation";
+import Navbar from "../../../components/Navbar";
+
+function Breadcrumb() {
+  const router = useNextRouter();
+  return (
+    <nav className="text-gray-500 mb-4 flex gap-1 text-sm">
+      <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>Dashboard</span>
+      <span>/</span>
+      <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>Admin</span>
+      <span>/</span>
+      <span className="text-gray-400">I am</span>
+    </nav>
+  );
+}
 
 const AdminConsole = () => {
   const router = useRouter();
@@ -36,7 +51,7 @@ const AdminConsole = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* 🔹 Top Navbar */}
-      <nav className="flex items-center justify-between bg-white shadow px-6 py-3">
+      {/* <nav className="flex items-center justify-between bg-white shadow px-6 py-3">
         <div className="flex items-center space-x-4">
           <span className="font-bold text-xl text-blue-600">🌍 Terra</span>
           <input
@@ -52,11 +67,12 @@ const AdminConsole = () => {
             👤
           </div>
         </div>
-      </nav>
+      </nav> */}
+      <Navbar />
 
       <div className="p-6">
         {/* 🔹 Breadcrumb */}
-        <div className="text-gray-500 mb-4">Dashboard / Admin / home / i am</div>
+        <Breadcrumb />
 
         {/* 🔹 Welcome Banner */}
         <div className="bg-white border rounded p-4 mb-6 text-sm text-gray-700">

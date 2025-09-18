@@ -27,8 +27,14 @@ export default function AddClientForm({ onAddClient }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Form Submitted:", formData);
-        if (onAddClient) onAddClient(); // Notify PopUp to show NewUserPopup
+        // Prepare client data for storage
+        const clientData = {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.mobile,
+            image: formData.photo ? URL.createObjectURL(formData.photo) : null,
+        };
+        if (onAddClient) onAddClient(clientData); // Pass client data up
     };
 
     return (

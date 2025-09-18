@@ -9,15 +9,18 @@ export default function Home() {
     const [rememberMe, setRememberMe] = useState(false);
     const router = useRouter();
 
+    const handleLogin = () => {
+        if (email === "admin@test.com" && password === "1234") {
+            localStorage.setItem("isLoggedIn", true);
+            router.push("/admin");
+        } else {
+            alert("Invalid credentials");
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle login logic here
-        console.log('Login attempt:', { email, password, rememberMe });
-        if (email === 'gufraanquraishi@gmail.com') {
-            router.push('/admin');
-        } else {
-            router.push('/client');
-        }
+        handleLogin();
     };
 
     return (

@@ -4,12 +4,17 @@ import AddClientForm from "./AddClientForm.jsx";
 import NewUserPopup from "./NewUserPopup.jsx";
 import EmailSignInPopup from "./EmailSignInPopup.jsx";
 
-export default function PopUp({ onClose }) {
+import { addClient, getClients } from "/utils/storage.js";
+
+export default function PopUp({ onClose, setClients }) {
     const [showNewUserPopup, setShowNewUserPopup] = useState(false);
     const [showEmailSignInPopup, setShowEmailSignInPopup] = useState(false);
 
     // Handler for AddClientForm submit
-    const handleAddClient = () => {
+    // Save client and show NewUserPopup
+    const handleAddClient = (clientData) => {
+        addClient(clientData);
+        setClients(getClients()); // update parent state
         setShowNewUserPopup(true);
     };
 
