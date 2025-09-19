@@ -140,18 +140,18 @@ const ClientsPage = () => {
           <>
             {clients.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-96">
-                <div className="grid grid-cols-2 gap-6 mb-8">
-                  <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span className="text-6xl">🧑</span>
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-100">
+                    <span className="text-4xl">👦</span>
                   </div>
-                  <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span className="text-6xl">👩</span>
+                  <div className="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-100">
+                    <span className="text-4xl">👧</span>
                   </div>
-                  <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span className="text-6xl">🧑‍🦱</span>
+                  <div className="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-100">
+                    <span className="text-4xl">👨</span>
                   </div>
-                  <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <span className="text-6xl">👨‍🦰</span>
+                  <div className="w-24 h-24 bg-white rounded-2xl shadow-lg flex items-center justify-center border border-gray-100">
+                    <span className="text-4xl">👩</span>
                   </div>
                 </div>
                 <div className="text-4xl font-semibold text-gray-500">No client added</div>
