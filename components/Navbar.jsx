@@ -64,15 +64,20 @@ export default function Navbar() {
 
             {/* Right Side */}
             <div className="flex items-center gap-4 w-1/3 justify-end">
+                {/* Headphone Button */}
+                <button
+                    onClick={() => alert("Headphones clicked")}
+                    className="w-9 h-9 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center"
+                >
+                    <Headphones className="w-5 h-5 text-gray-600" />
+                </button>
+
                 {/* Notification Bell */}
                 <button
                     onClick={() => alert("Notifications clicked")}
-                    className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
+                    className="relative w-9 h-9 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center"
                 >
-                    <div className="flex items-center gap-1">
-                        <Headphones className="w-4 h-4 text-gray-600" />
-                        <Bell className="w-5 h-5 text-gray-600" />
-                    </div>
+                    <Bell className="w-5 h-5 text-gray-600" />
                     <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center">
                         <span className="text-xs text-white font-medium">10</span>
                     </span>
