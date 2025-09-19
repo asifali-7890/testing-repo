@@ -172,207 +172,219 @@ export default function UserProfile() {
         </div>
 
         {/* Middle User Information */}
-        <div className="flex-1 bg-white shadow-sm rounded-lg p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">User Information</h3>
-            {!editUserInfo && (
+        <div className="flex-1 bg-white shadow-sm rounded-lg p-6 flex flex-col justify-between w-80">
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">User Information</h3>
+              {!editUserInfo && (
+                <button
+                  className="text-blue-500 font-semibold text-sm hover:text-blue-600"
+                  onClick={handleEditUserInfo}
+                >
+                  EDIT
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={form.firstName || client.firstName || ""}
+                    onChange={handleChange}
+                    readOnly={!editUserInfo}
+                    className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={form.lastName || client.lastName || ""}
+                    onChange={handleChange}
+                    readOnly={!editUserInfo}
+                    className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email || client.email}
+                  onChange={handleChange}
+                  readOnly={!editUserInfo}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Organization / Company</label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={form.company || client.company || ""}
+                    onChange={handleChange}
+                    readOnly={!editUserInfo}
+                    className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                  <input
+                    type="text"
+                    name="department"
+                    value={form.department || client.department || client.jobTitle || ""}
+                    onChange={handleChange}
+                    readOnly={!editUserInfo}
+                    className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+                <input
+                  type="text"
+                  name="phone"
+                  value={form.phone || client.phone || ""}
+                  onChange={handleChange}
+                  readOnly={!editUserInfo}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Address / Country</label>
+                <input
+                  type="text"
+                  name="country"
+                  value={form.country || client.country || client.address || ""}
+                  onChange={handleChange}
+                  readOnly={!editUserInfo}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                />
+              </div>
+            </div>
+
+
+          </div>
+          {editUserInfo && (
+            <div className="flex gap-3 pt-4 justify-end mt-6">
               <button
-                className="text-blue-500 font-semibold text-sm hover:text-blue-600"
-                onClick={handleEditUserInfo}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                onClick={handleCancelUserInfo}
               >
-                EDIT
+                Cancel
               </button>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={form.firstName || client.firstName || ""}
-                  onChange={handleChange}
-                  readOnly={!editUserInfo}
-                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={form.lastName || client.lastName || ""}
-                  onChange={handleChange}
-                  readOnly={!editUserInfo}
-                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                />
-              </div>
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors"
+                onClick={handleSaveUserInfo}
+              >
+                Save Changes
+              </button>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={form.email || client.email}
-                onChange={handleChange}
-                readOnly={!editUserInfo}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Organization / Company</label>
-                <input
-                  type="text"
-                  name="company"
-                  value={form.company || client.company || ""}
-                  onChange={handleChange}
-                  readOnly={!editUserInfo}
-                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
-                <input
-                  type="text"
-                  name="department"
-                  value={form.department || client.department || client.jobTitle || ""}
-                  onChange={handleChange}
-                  readOnly={!editUserInfo}
-                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-              <input
-                type="text"
-                name="phone"
-                value={form.phone || client.phone || ""}
-                onChange={handleChange}
-                readOnly={!editUserInfo}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Address / Country</label>
-              <input
-                type="text"
-                name="country"
-                value={form.country || client.country || client.address || ""}
-                onChange={handleChange}
-                readOnly={!editUserInfo}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-              />
-            </div>
-
-            {editUserInfo && (
-              <div className="flex gap-3 pt-4">
-                <button
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-                  onClick={handleCancelUserInfo}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors"
-                  onClick={handleSaveUserInfo}
-                >
-                  Save Changes
-                </button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
 
         {/* Right Organizational Details */}
-        <div className="w-80 bg-white shadow-sm rounded-lg p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-gray-900">Organizational Details</h3>
-            {!editOrgDetails && (
+        <div className="w-80 bg-white shadow-sm rounded-lg p-6 flex flex-col justify-between">
+          <div>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">Organizational Details</h3>
+              {!editOrgDetails && (
+                <button
+                  className="text-blue-500 font-semibold text-sm hover:text-blue-600"
+                  onClick={handleEditOrgDetails}
+                >
+                  EDIT
+                </button>
+              )}
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex flex-col">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
+                  <input
+                    type="text"
+                    name="jobTitle"
+                    value={form.jobTitle || client.jobTitle || ""}
+                    onChange={handleChange}
+                    readOnly={!editOrgDetails}
+                    className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editOrgDetails
+                      ? "bg-gray-50 text-gray-600"
+                      : "bg-white text-gray-900"
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
+                  <input
+                    type="text"
+                    name="role"
+                    value={form.role || client.role || ""}
+                    onChange={handleChange}
+                    readOnly={!editOrgDetails}
+                    className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editOrgDetails
+                      ? "bg-gray-50 text-gray-600"
+                      : "bg-white text-gray-900"
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Permissions</label>
+                  <div className="flex flex-wrap gap-2">
+                    {(client.permissions || ["Permission 1", "Permission 2", "Permission 3"]).map(
+                      (perm, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full"
+                        >
+                          {perm}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {editOrgDetails && (
+            <div className="flex justify-end gap-3 mt-6">
               <button
-                className="text-blue-500 font-semibold text-sm hover:text-blue-600"
-                onClick={handleEditOrgDetails}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                onClick={handleCancelOrgDetails}
               >
-                EDIT
+                Cancel
               </button>
-            )}
-          </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
-              <input
-                type="text"
-                name="jobTitle"
-                value={form.jobTitle || client.jobTitle || ""}
-                onChange={handleChange}
-                readOnly={!editOrgDetails}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editOrgDetails ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-              />
+              <button
+                className="px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors"
+                onClick={handleSaveOrgDetails}
+              >
+                Save Changes
+              </button>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
-              <input
-                type="text"
-                name="role"
-                value={form.role || client.role || ""}
-                onChange={handleChange}
-                readOnly={!editOrgDetails}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editOrgDetails ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Permissions</label>
-              <div className="flex flex-wrap gap-2">
-                {(client.permissions || ["Permission 1", "Permission 2", "Permission 3"]).map(
-                  (perm, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-full"
-                    >
-                      {perm}
-                    </span>
-                  )
-                )}
-              </div>
-            </div>
-
-            {editOrgDetails && (
-              <div className="flex gap-3 pt-4">
-                <button
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-                  onClick={handleCancelOrgDetails}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors"
-                  onClick={handleSaveOrgDetails}
-                >
-                  Save Changes
-                </button>
-              </div>
-            )}
-          </div>
+          )}
         </div>
+
       </div>
     </div>
   );
