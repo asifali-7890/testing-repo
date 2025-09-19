@@ -1,10 +1,9 @@
 import React from "react";
 import { useRouter } from "next/router";
-import { useRouter as useNextRouter } from "next/navigation";
 import Navbar from "../../../components/Navbar";
 
 function Breadcrumb() {
-  const router = useNextRouter();
+  const router = useRouter();
   return (
     <nav className="text-gray-500 mb-4 flex gap-1 text-sm">
       <span className="hover:underline cursor-pointer" onClick={() => router.push("/admin")}>Dashboard</span>
