@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Menu, Bell, Home, Search, Plus } from "lucide-react";
+import { Menu, Bell, Home, Search, Plus, Headphones } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 
@@ -69,9 +69,12 @@ export default function Navbar() {
                     onClick={() => alert("Notifications clicked")}
                     className="relative p-2 hover:bg-gray-100 rounded-full transition-colors"
                 >
-                    <Bell className="w-5 h-5 text-gray-600" />
-                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-red-500 flex items-center justify-center">
-                        <span className="text-xs text-white font-medium">1</span>
+                    <div className="flex items-center gap-1">
+                        <Headphones className="w-4 h-4 text-gray-600" />
+                        <Bell className="w-5 h-5 text-gray-600" />
+                    </div>
+                    <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center">
+                        <span className="text-xs text-white font-medium">10</span>
                     </span>
                 </button>
 
