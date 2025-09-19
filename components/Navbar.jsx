@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { Menu, Bell, Home, Search, Plus } from "lucide-react";
 import { useRouter } from 'next/navigation';
+import Image from "next/image";
 
 export default function Navbar() {
     const [search, setSearch] = useState("");
@@ -80,9 +81,11 @@ export default function Navbar() {
                         onClick={() => setShowLogout((prev) => !prev)}
                         className="w-9 h-9 rounded-full overflow-hidden border-2 border-gray-200 hover:border-gray-300 transition-colors"
                     >
-                        <img
+                        <Image
                             src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop"
                             alt="Profile"
+                            width={36}   // match w-9
+                            height={36}  // match h-9
                             className="w-full h-full object-cover"
                         />
                     </button>

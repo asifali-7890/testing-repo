@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from 'next/router';
 import Navbar from '../../../../../components/Navbar.jsx';
 import { getClients } from '/utils/storage.js';
+import Image from "next/image.js";
 
 export default function UserProfile() {
   const router = useRouter();
@@ -117,24 +118,26 @@ export default function UserProfile() {
     <div className="min-h-screen bg-gray-100">
       <Navbar />
       <Breadcrumb />
-      
+
       <div className="flex gap-6 p-6">
         {/* Left Profile Card */}
         <div className="w-80 bg-white shadow-sm rounded-lg p-6 flex flex-col items-center h-fit">
-          <img
+          <Image
             src={client.image || "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&fit=crop"}
             alt="profile"
+            width={80}
+            height={80}
             className="w-20 h-20 rounded-full mb-4 object-cover"
           />
           <h2 className="text-xl font-semibold text-gray-900 mb-1">
             {`${client.firstName || ''} ${client.lastName || ''}`.trim() || client.name}
           </h2>
           <p className="text-sm text-gray-600 mb-3">{client.email}</p>
-          
+
           <span className="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-700 mb-4">
             {client.status || 'active'}
           </span>
-          
+
           <div className="text-xs text-gray-500 text-center mb-6">
             <p>Last sign in: {client.lastActive || '40 minutes ago'}</p>
             <p>Created: {client.joinDate || 'June 15 2021'}</p>
@@ -173,15 +176,15 @@ export default function UserProfile() {
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-semibold text-gray-900">User Information</h3>
             {!editUserInfo && (
-              <button 
-                className="text-blue-500 font-semibold text-sm hover:text-blue-600" 
+              <button
+                className="text-blue-500 font-semibold text-sm hover:text-blue-600"
                 onClick={handleEditUserInfo}
               >
                 EDIT
               </button>
             )}
           </div>
-          
+
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -192,9 +195,8 @@ export default function UserProfile() {
                   value={form.firstName || client.firstName || ""}
                   onChange={handleChange}
                   readOnly={!editUserInfo}
-                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                    !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
               <div>
@@ -205,9 +207,8 @@ export default function UserProfile() {
                   value={form.lastName || client.lastName || ""}
                   onChange={handleChange}
                   readOnly={!editUserInfo}
-                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                    !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
             </div>
@@ -220,9 +221,8 @@ export default function UserProfile() {
                 value={form.email || client.email}
                 onChange={handleChange}
                 readOnly={!editUserInfo}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                  !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
 
@@ -235,9 +235,8 @@ export default function UserProfile() {
                   value={form.company || client.company || ""}
                   onChange={handleChange}
                   readOnly={!editUserInfo}
-                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                    !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
               <div>
@@ -248,9 +247,8 @@ export default function UserProfile() {
                   value={form.department || client.department || client.jobTitle || ""}
                   onChange={handleChange}
                   readOnly={!editUserInfo}
-                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                    !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                    } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
             </div>
@@ -263,9 +261,8 @@ export default function UserProfile() {
                 value={form.phone || client.phone || ""}
                 onChange={handleChange}
                 readOnly={!editUserInfo}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                  !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
 
@@ -277,22 +274,21 @@ export default function UserProfile() {
                 value={form.country || client.country || client.address || ""}
                 onChange={handleChange}
                 readOnly={!editUserInfo}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                  !editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editUserInfo ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
 
             {editUserInfo && (
               <div className="flex gap-3 pt-4">
-                <button 
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors" 
+                <button
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                   onClick={handleCancelUserInfo}
                 >
                   Cancel
                 </button>
-                <button 
-                  className="px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors" 
+                <button
+                  className="px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors"
                   onClick={handleSaveUserInfo}
                 >
                   Save Changes
@@ -307,15 +303,15 @@ export default function UserProfile() {
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-semibold text-gray-900">Organizational Details</h3>
             {!editOrgDetails && (
-              <button 
-                className="text-blue-500 font-semibold text-sm hover:text-blue-600" 
+              <button
+                className="text-blue-500 font-semibold text-sm hover:text-blue-600"
                 onClick={handleEditOrgDetails}
               >
                 EDIT
               </button>
             )}
           </div>
-          
+
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Job Title</label>
@@ -325,12 +321,11 @@ export default function UserProfile() {
                 value={form.jobTitle || client.jobTitle || ""}
                 onChange={handleChange}
                 readOnly={!editOrgDetails}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                  !editOrgDetails ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editOrgDetails ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Role</label>
               <input
@@ -339,12 +334,11 @@ export default function UserProfile() {
                 value={form.role || client.role || ""}
                 onChange={handleChange}
                 readOnly={!editOrgDetails}
-                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${
-                  !editOrgDetails ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
-                } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                className={`w-full px-3 py-2 text-sm border border-gray-200 rounded-md ${!editOrgDetails ? "bg-gray-50 text-gray-600" : "bg-white text-gray-900"
+                  } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
               />
             </div>
-            
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Permissions</label>
               <div className="flex flex-wrap gap-2">
@@ -363,14 +357,14 @@ export default function UserProfile() {
 
             {editOrgDetails && (
               <div className="flex gap-3 pt-4">
-                <button 
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors" 
+                <button
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
                   onClick={handleCancelOrgDetails}
                 >
                   Cancel
                 </button>
-                <button 
-                  className="px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors" 
+                <button
+                  className="px-4 py-2 text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 rounded-md transition-colors"
                   onClick={handleSaveOrgDetails}
                 >
                   Save Changes

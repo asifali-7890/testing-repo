@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const AssignRolePopup = ({ isOpen, onClose, onSave }) => {
+const AssignRolePopup = ({ isOpen, onClose, onSave, client }) => {
     const jobTitles = [
         "Head of Finance", "Transformation Director", "Vice President",
         "Senior Transaction Manager", "Securitisation Assistant Manager",
@@ -38,12 +38,13 @@ const AssignRolePopup = ({ isOpen, onClose, onSave }) => {
 
     if (!isOpen) return null;
 
+
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-white w-[500px] rounded-lg shadow-lg p-6 relative">
                 {/* Header */}
                 <h2 className="text-lg font-bold mb-2">ASSIGN ROLE</h2>
-                <p className="text-sm text-gray-500 mb-6">Regina Cooper - reginacooper01@gmail.com</p>
+                <p className="text-sm text-gray-500 mb-6">{client.name} - {client.email}</p>
 
                 {/* Job Title */}
                 <label className="block text-sm font-semibold mb-1">Select Job Title</label>

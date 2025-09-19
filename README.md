@@ -1,15 +1,15 @@
 Sure! Here’s a clean, professional **README.md** template for your project that includes instructions to run it locally with `npm install` and `npm run dev`:
 
 ````markdown
-# Jarvis-App
+# Terra-App
 
 A brief description of your project here. Explain what it does and its purpose.
 
 ## Features
 
-- Feature 1
-- Feature 2
-- Feature 3
+-   Feature 1
+-   Feature 2
+-   Feature 3
 
 ## Prerequisites
 
@@ -21,12 +21,13 @@ Make sure you have [Node.js](https://nodejs.org/) installed on your machine.
 
 ```bash
 git clone https://github.com/Antartica-Avalanche/Frontend_dev_Test.git
+```
 ````
 
 2. Navigate to the project directory:
 
 ```bash
-cd Jarvis-App
+cd Terra-App
 ```
 
 3. Install dependencies:

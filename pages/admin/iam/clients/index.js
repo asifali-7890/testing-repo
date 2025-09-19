@@ -105,7 +105,7 @@ const ClientsPage = () => {
         {/* 🔹 Header */}
         <div className="flex items-center justify-between mb-6">
           <select className="border rounded px-4 py-2 text-gray-700">
-            <option>Jarvis App</option>
+            <option>Terra App</option>
           </select>
           <button
             onClick={() => setShowPopup(true)}

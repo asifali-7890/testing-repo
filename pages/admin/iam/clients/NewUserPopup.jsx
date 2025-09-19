@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React from "react";
 
 export default function NewUserPopup({ isOpen, onClose, onEmailSignIn, client }) {
@@ -27,8 +28,17 @@ export default function NewUserPopup({ isOpen, onClose, onEmailSignIn, client })
                 {/* Avatar + Name */}
                 <div className="flex flex-col items-center">
                     <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 text-2xl">
-                        {client?.image ? <img src={client.image} alt="avatar" className="w-16 h-16 rounded-full object-cover" /> : "🖼️"}
-                    </div>
+                        {client?.image ? (
+                            <Image
+                                src={client.image}
+                                alt="avatar"
+                                width={64} // w-16 = 64px
+                                height={64} // h-16 = 64px
+                                className="rounded-full object-cover"
+                            />
+                        ) : (
+                            "🖼️"
+                        )}                    </div>
                     <h3 className="text-lg font-medium text-gray-900 mt-3">
                         {client?.name || "-"}
                     </h3>

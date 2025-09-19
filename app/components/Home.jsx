@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Home() {
     const [email, setEmail] = useState('');
@@ -29,9 +30,9 @@ export default function Home() {
             <div className="flex-1 bg-gray-50 flex items-center justify-center px-4 sm:px-6 lg:px-8">
                 <div className="max-w-md w-full space-y-8">
                     <div>
-                        <h1 className="text-5xl font-light text-gray-900 mb-8">Jarvis</h1>
+                        <h1 className="text-5xl font-light text-gray-900 mb-8">Terra</h1>
                         <p className="text-gray-600 text-sm leading-relaxed mb-12">
-                            The world's largest avatar-based social commerce takes place inside a
+                            The worlds largest avatar-based social commerce takes place inside a
                             virtual world powered blockchain metaverse where players play to earn
                             Crypto & NFT through shared experiences, build deeper friendships,
                             creativity counts, and all relationships matter.
@@ -129,9 +130,11 @@ export default function Home() {
                 {/* Professional Image Cards */}
                 <div className="absolute top-1/4 right-1/4 transform -translate-x-1/2">
                     <div className="bg-white rounded-lg shadow-xl overflow-hidden w-48 h-32">
-                        <img
+                        <Image
                             src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=400"
                             alt="Professional woman working"
+                            width={192}  // w-48 = 192px
+                            height={128} // h-32 = 128px
                             className="w-full h-full object-cover"
                         />
                     </div>
@@ -139,9 +142,11 @@ export default function Home() {
 
                 <div className="absolute bottom-1/4 right-1/3 transform translate-x-1/2">
                     <div className="bg-white rounded-lg shadow-xl overflow-hidden w-56 h-36">
-                        <img
+                        <Image
                             src="https://images.pexels.com/photos/3184360/pexels-photo-3184360.jpeg?auto=compress&cs=tinysrgb&w=400"
                             alt="Business team meeting"
+                            width={224}  // w-56 = 224px
+                            height={144} // h-36 = 144px
                             className="w-full h-full object-cover"
                         />
                     </div>
@@ -149,9 +154,11 @@ export default function Home() {
 
                 <div className="absolute top-1/2 left-1/4">
                     <div className="bg-white rounded-lg shadow-xl overflow-hidden w-40 h-28">
-                        <img
+                        <Image
                             src="https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg?auto=compress&cs=tinysrgb&w=400"
                             alt="Professional man at desk"
+                            width={160}  // w-40 = 160px
+                            height={112} // h-28 = 112px
                             className="w-full h-full object-cover"
                         />
                     </div>
