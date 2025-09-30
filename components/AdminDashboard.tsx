@@ -1,9 +1,14 @@
 import React from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Navbar from "./Navbar";
 
-const AdminDashboard = () => {
-    const cards = [
+interface Card {
+    title: string;
+    active: boolean;
+}
+
+const AdminDashboard: React.FC = () => {
+    const cards: Card[] = [
         { title: "I AM", active: true },
         { title: "IDENTITY & ORGANIZATION", active: false },
         { title: "-", active: false },
@@ -17,7 +22,7 @@ const AdminDashboard = () => {
 
     const router = useRouter();
 
-    const handleCardClick = (card) => {
+    const handleCardClick = (card: Card) => {
         if (card.title === "I AM") {
             router.push("/admin/iam");
         }

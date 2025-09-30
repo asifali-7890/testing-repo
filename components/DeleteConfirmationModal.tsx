@@ -1,6 +1,12 @@
 import React from "react";
 
-export default function DeleteConfirmationModal({ isOpen, onCancel, onConfirm }) {
+interface DeleteConfirmationModalProps {
+    isOpen: boolean;
+    onCancel: () => void;
+    onConfirm: () => void;
+}
+
+export default function DeleteConfirmationModal({ isOpen, onCancel, onConfirm }: DeleteConfirmationModalProps) {
     if (!isOpen) return null;
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">

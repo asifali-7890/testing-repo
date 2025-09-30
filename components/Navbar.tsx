@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation';
 import Image from "next/image";
 
 export default function Navbar() {
-    const [search, setSearch] = useState("");
-    const [showLogout, setShowLogout] = useState(false);
+    const [search, setSearch] = useState<string>("");
+    const [showLogout, setShowLogout] = useState<boolean>(false);
     const router = useRouter();
 
     // Simulate user login state (replace with real auth logic)

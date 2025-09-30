@@ -5,21 +5,21 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function Home() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [rememberMe, setRememberMe] = useState<boolean>(false);
     const router = useRouter();
 
     const handleLogin = () => {
         if (email === "admin@test.com" && password === "1234") {
-            localStorage.setItem("isLoggedIn", true);
+            localStorage.setItem("isLoggedIn", "true");
             router.push("/admin");
         } else {
             alert("Invalid credentials");
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         handleLogin();
     };
