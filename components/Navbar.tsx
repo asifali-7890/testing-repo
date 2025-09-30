@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Menu, Bell, Home, Search, Plus, Headphones } from "lucide-react";
+import { Menu, Bell, Chrome as Home, Search, Plus, Headphones } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 
