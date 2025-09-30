@@ -1,5 +1,6 @@
+'use client';
 
-import Home from '../app/components/Home.jsx';
+import Home from './components/Home.jsx';
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 

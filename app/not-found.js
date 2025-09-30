@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Home, ArrowLeft } from 'lucide-react';
 
-export default function Custom404() {
+export default function NotFound() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full text-center">
